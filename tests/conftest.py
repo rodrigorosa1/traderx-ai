@@ -1,4 +1,7 @@
 import os
+
+os.environ["TESTING"] = "true"
+
 import pytest
 import datetime
 from sqlalchemy import create_engine
@@ -109,5 +112,5 @@ def client(db_session):
 
     app.dependency_overrides[get_db] = override_get_db
 
-    with TestClient(app) as c:
-        yield c
+    yield TestClient(app)
+    app.dependency_overrides.clear()
