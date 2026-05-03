@@ -20,7 +20,13 @@ def run() -> dict:
         execution = job_execution_service.start(
             job_name=JOB_NAME,
             metadata_json={
-                "assets": ["BTC-USD", "ETH-USD"],
+                "assets": [
+                    "BTC-USD",
+                    "ETH-USD",
+                    "USDT-USD",
+                    "BNB-USD",
+                    "XRP-USD",
+                ],
                 "horizons": [12, 24],
             },
         )
@@ -33,7 +39,7 @@ def run() -> dict:
 
         results = []
 
-        for ticker in ["BTC-USD", "ETH-USD"]:
+        for ticker in ["BTC-USD", "ETH-USD", "USDT-USD", "BNB-USD", "XRP-USD"]:
             for horizon_hours in [12, 24]:
                 result = training_service.train_asset_models(
                     ticker=ticker,
