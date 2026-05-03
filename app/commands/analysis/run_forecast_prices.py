@@ -1,5 +1,4 @@
 import argparse
-import os
 import sys
 
 from app.core.database import SessionLocal
@@ -18,7 +17,13 @@ from app.services.sentiment_service import SentimentService
 from app.services.signal_engine_service import SignalEngineService
 
 JOB_NAME = "forecast_prices"
-DEFAULT_TICKERS = ["BTC-USD", "ETH-USD"]
+DEFAULT_TICKERS = [
+    "BTC-USD",
+    "ETH-USD",
+    "USDT-USD",
+    "BNB-USD",
+    "XRP-USD",
+]
 DEFAULT_HOURS = 24
 
 
