@@ -12,6 +12,7 @@ from app.routes.subscriptions import router as subscription_router
 from app.routes.forecast import router as forecast_router
 from app.routes.analysis import router as analysis_router
 from app.routes.accounts import router as account_router
+from app.routes.assets import router as asset_router
 
 import app.commands.analysis.run_train_models as run_train_models
 import app.commands.analysis.run_forecast_prices as run_forecast_prices
@@ -39,11 +40,15 @@ app.include_router(subscription_router, prefix="/subscriptions")
 app.include_router(forecast_router, prefix="/forecast")
 app.include_router(analysis_router, prefix="/analysis")
 app.include_router(account_router, prefix="/account")
+app.include_router(asset_router, prefix="/assets")
 
 
 @app.on_event("startup")
 @repeat_every(seconds=43200, wait_first=False)
 def scheduled_run_train_ml_models() -> None:
+    if settings.TESTING:
+        return
+
     logger.info("starting scheduled job: train_ml_models")
     result = run_train_models.run()
     logger.info(f"scheduled job finished: train_ml_models | result={result}")
@@ -52,6 +57,9 @@ def scheduled_run_train_ml_models() -> None:
 @app.on_event("startup")
 @repeat_every(seconds=3600, wait_first=True)
 def scheduled_run_forecast_prices() -> None:
+    if settings.TESTING:
+        return
+
     logger.info("starting scheduled job: forecast_prices")
     result = run_forecast_prices.run()
     logger.info(f"scheduled job finished: forecast_prices | result={result}")
@@ -60,6 +68,9 @@ def scheduled_run_forecast_prices() -> None:
 @app.on_event("startup")
 @repeat_every(seconds=86400, wait_first=True)
 def scheduled_run_full_analysis_cycle() -> None:
+    if settings.TESTING:
+        return
+
     logger.info("starting scheduled job: full_analysis_cycle")
     result = run_full_analysis_cycle.run()
     logger.info(f"scheduled job finished: full_analysis_cycle | result={result}")
