@@ -72,6 +72,7 @@ Pygments==2.19.1
 pyparsing==3.2.3
 pytest==8.4.0
 pytest-mock==3.14.1
+python-binance==1.0.19
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
 python-jose==3.5.0

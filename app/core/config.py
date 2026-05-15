@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
     OPENAI_MODEL: str = "gpt-4.1-mini"
     OPENAI_TIMEOUT_SECONDS: int = 60
+    BINANCE_API_KEY: str
+    BINANCE_API_SECRET: str
 
     class Config:
         env_file = ".env"
