@@ -1,5 +1,9 @@
-from typing import List, Protocol
-from uuid import UUID
-from app.models.user import User
-from app.schemas.user_asset_schema import UserAssetOut
-from app.schemas.user_schema import UserIn, UserOut
+from typing import Dict, List, Protocol
+from app.schemas.trading_signal_schema import TradingSignalOut
+
+
+class ITradingSignalRepository(Protocol):
+    def create(self, data: Dict) -> TradingSignalOut: ...
+    def create_many(self, items: List[Dict]) -> List[TradingSignalOut]: ...
+    def find_pending(self, limit: int = 100) -> List[TradingSignalOut]: ...
+    def find_by_id(self, signal_id: int) -> TradingSignalOut | None: ...

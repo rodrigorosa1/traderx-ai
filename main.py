@@ -53,17 +53,6 @@ def scheduled_run_train_ml_models() -> None:
     logger.info(f"scheduled job finished: train_ml_models | result={result}")
 
 
-@app.on_event("startup")
-@repeat_every(seconds=86400, wait_first=True)
-def scheduled_run_full_analysis_cycle() -> None:
-    if settings.TESTING:
-        return
-
-    logger.info("starting scheduled job: full_analysis_cycle")
-    result = run_full_analysis_cycle.run()
-    logger.info(f"scheduled job finished: full_analysis_cycle | result={result}")
-
-
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
