@@ -1,7 +1,9 @@
 import sys
 
 from app.core.database import SessionLocal
+from app.repositories.sqlalchemy.asset_repository import AssetRepository
 from app.repositories.sqlalchemy.job_execution_repository import JobExecutionRepository
+from app.services.asset_service import AssetService
 from app.services.job_execution_service import JobExecutionService
 from app.services.market_data_service import MarketDataService
 from app.services.feature_engineering_service import FeatureEngineeringService
@@ -9,6 +11,7 @@ from app.services.ml_model_service import MlModelService
 from app.services.ml_training_service import MlTrainingService
 
 JOB_NAME = "train_ml_models"
+HORIZONS = [12, 24]
 
 
 def run() -> dict:
@@ -17,22 +20,17 @@ def run() -> dict:
 
     try:
         job_execution_service = JobExecutionService(JobExecutionRepository(db))
+
+        asset_service = AssetService(AssetRepository(db))
+        assets = asset_service.find_all()
+
+        tickers = [asset.code for asset in assets if asset.code]
+
         execution = job_execution_service.start(
             job_name=JOB_NAME,
             metadata_json={
-                "assets": [
-                    "BTC-USD",
-                    "ETH-USD",
-                    "USDT-USD",
-                    "BNB-USD",
-                    "XRP-USD",
-                    "USDC-USD",
-                    "SOL-USD",
-                    "TRX-USD",
-                    "DOGE-USD",
-                    "ADA-USD",
-                ],
-                "horizons": [12, 24],
+                "assets": tickers,
+                "horizons": HORIZONS,
             },
         )
 
@@ -44,8 +42,8 @@ def run() -> dict:
 
         results = []
 
-        for ticker in ["BTC-USD", "ETH-USD", "USDT-USD", "BNB-USD", "XRP-USD"]:
-            for horizon_hours in [12, 24]:
+        for ticker in tickers:
+            for horizon_hours in HORIZONS:
                 result = training_service.train_asset_models(
                     ticker=ticker,
                     horizon_hours=horizon_hours,
